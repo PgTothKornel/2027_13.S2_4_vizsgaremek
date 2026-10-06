@@ -29,3 +29,6 @@ a{color:inherit;text-decoration:none}button,input,select{font:inherit}button{col
 .app-heading>div,.app-content{min-width:0}
 @media(max-width:980px){.app-shell{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:680px){.app-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}.app-heading .muted{white-space:normal;overflow-wrap:anywhere}}
+
+/* Override to hide the decorative marquee stripe in the built output */
+.marquee{display:none!important}
