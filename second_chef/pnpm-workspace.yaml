@@ -1,9 +1,10 @@
 packages:
   - .
 allowBuilds:
+  '@prisma/engines': true
   bcrypt: true
+  core-js: true
+  esbuild: true
+  prisma: true
   sharp: true
 minimumReleaseAge: 2880
-onlyBuiltDependencies:
-  - bcrypt
-  - sharp
