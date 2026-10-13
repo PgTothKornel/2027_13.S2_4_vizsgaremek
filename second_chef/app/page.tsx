@@ -1,13 +1,45 @@
-import Image from 'next/image';
+import SecondChefProvider from '@/app/components/SecondChefProvider';
+import PageView from '@/app/components/PageView';
+import PageMotion from '@/app/components/PageMotion';
+import { SiteHeader, MobileAppNav } from '@/app/components/navigation/Navigation';
+import HeroSection from '@/app/components/home/HeroSection';
+import Marquee from '@/app/components/home/Marquee';
+import IntroSection from '@/app/components/home/IntroSection';
+import HowItWorks from '@/app/components/home/HowItWorks';
+import FeaturesSection from '@/app/components/home/FeaturesSection';
+import RecipeShowcase from '@/app/components/home/RecipeShowcase';
+import CallToAction from '@/app/components/home/CallToAction';
+import SiteFooter from '@/app/components/home/SiteFooter';
+import { DiscoverView, FavoritesView } from '@/app/components/recipes/RecipeViews';
+import RecipeModal from '@/app/components/recipes/RecipeModal';
+import PantryView from '@/app/components/pantry/PantryView';
+import ShoppingView from '@/app/components/shopping/ShoppingView';
+import ProfileView from '@/app/components/profile/ProfileView';
 
 export default function Page() {
   return (
-    <main className="flex min-h-screen flex-col p-6 block md:items-center md:justify-center w-full h-full bg-gray-100">
-        <div className="w-[60%] h-[60%] mx-auto py-10 flex rounded-lg px-6 md:w-2/5 md:px-20 border-2 border-gray-300/75 bg-kulonfeher-100 shadow-lg">
-          <p className={`text-xl text-black-800 md:text-3xl md:leading-normal`}>
-             <Image src="/content.webp" alt="ReChef" width={500} height={300} /><br/>Ez lesz majd az alap.
-          </p>
-        </div>
-    </main>
+    <SecondChefProvider>
+      <PageMotion />
+      <SiteHeader />
+      <main>
+        <PageView name="home">
+          <HeroSection />
+          <Marquee />
+          <IntroSection />
+          <HowItWorks />
+          <FeaturesSection />
+          <RecipeShowcase />
+          <CallToAction />
+          <SiteFooter />
+        </PageView>
+        <PageView name="discover"><DiscoverView /></PageView>
+        <PageView name="pantry"><PantryView /></PageView>
+        <PageView name="favorites"><FavoritesView /></PageView>
+        <PageView name="shopping"><ShoppingView /></PageView>
+        <PageView name="profile"><ProfileView /></PageView>
+      </main>
+      <MobileAppNav />
+      <RecipeModal />
+    </SecondChefProvider>
   );
 }
