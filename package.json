@@ -4,5 +4,10 @@
   },
   "allowScripts": {
     "pnpm@12.11.2": true
+  },
+  "scripts": {
+    "dev": "npm --prefix second_chef run dev",
+    "build": "npm --prefix second_chef run build",
+    "start": "npm --prefix second_chef run start"
   }
 }

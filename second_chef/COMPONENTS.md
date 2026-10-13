@@ -22,9 +22,6 @@ Indítás a `second_chef` könyvtárból: `npm run dev`. Éles build: `npm run b
 
 A komponensek, a `page.tsx` és a `layout.tsx` TypeScript-ellenőrzése sikeres. Böngészőben ellenőrizve: nézetváltás, receptszűrés és keresés, kedvencmentés, receptablak, adagszám, hiányzók hozzáadása a listához, kamratétel hozzáadása/törlése és újratöltés utáni megőrzése.
 
-Az `npm run build` sikeresen lefordítja a felületet, majd a meglévő adatbázisos fájlok típusellenőrzésén megáll:
+A teljes éles build, a Prisma-kliens generálása és a TypeScript-ellenőrzés sikeres. A Prisma CLI, kliens és PostgreSQL-adapter verziója egységesen 7.10.0; a kliens telepítéskor és build előtt automatikusan generálódik. A meglévő adatbázis-konfigurációk ugyanazt az opcionális kapcsolatbeállítást használják.
 
-- `app/lib/prisma.ts`: hiányzik az `app/generated/prisma/client.ts` generált kliens.
-- `prisma.config.ts` és `prisma7.config.ts`: az opcionális környezeti változóból származó adatbázis-URL típusa nem felel meg a telepített Prisma konfiguráció típusának.
-
-A build nem hagyja figyelmen kívül ezeket a hibákat; az adatbázis beállítása külön javítást igényel. A helyi függőségek a meglévő `package.json` alapján telepítve lettek, a csomaglista és a lockfájlok módosítása nélkül. A PostCSS konfiguráció CommonJS-exportot használ, hogy a Next.js helyesen beolvassa.
+Az indítás és a tárhelybeállítások a [DEPLOYMENT.md](DEPLOYMENT.md) fájlban találhatók.
