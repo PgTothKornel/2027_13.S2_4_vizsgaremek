@@ -34,11 +34,15 @@
     "@types/pg": "^8.23.1",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
-    "dotenv": "^18.0.5",
-    "prisma": "^6.12.0",
+    "dotenv": "^18.0.7",
+    "prisma": "^7.10.0",
     "tsx": "^4.23.15"
   },
   "allowScripts": {
+    "@prisma/engines@6.12.0": true,
+    "bcrypt@5.1.1": true,
+    "core-js@2.6.12": true,
+    "esbuild@0.28.2": true,
     "prisma@7.10.0": true
   }
 }
