@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "pnpm": "^12.11.2"
+  },
+  "allowScripts": {
+    "pnpm@12.11.2": true
+  }
+}
