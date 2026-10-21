@@ -1,7 +1,12 @@
-import { prisma } from "./lib/prisma.ts";
+import dotenv from "dotenv";
+import { resolve } from "node:path";
 
-console.log("teszt")
-console.log("Connecting to:", process.env.DATABASE_URL);
+dotenv.config({ path: resolve(process.cwd(), ".env") });
+
+console.log("DATABASE_URL loaded:", process.env.DATABASE_URL);
+
+const { prisma } = await import("../app/lib/prisma.ts");
+
 async function main() {
   const newUser = await prisma.user.create({
     data: {
@@ -21,4 +26,4 @@ main()
     await prisma.$disconnect();
   });
 
-console.log("tesztebb")
+console.log("tesztebb");
