@@ -1,29 +1,23 @@
 import dotenv from "dotenv";
 import { resolve } from "node:path";
-
 dotenv.config({ path: resolve(process.cwd(), ".env") });
 
-console.log("DATABASE_URL loaded:", process.env.DATABASE_URL);
+//console.log("DATABASE_URL loaded:", process.env.DATABASE_URL);
 
-const { prisma } = await import("../app/lib/prisma.ts");
 
 async function main() {
-  const newUser = await prisma.user.create({
-    data: {
-      email: "noel@kocsis",
-      name: "NKoel",
-    },
-  });
+  const { getAllUsers, addUser, userCount } = await import("./lib/functions");
+  console.log("Users:");
+  const users = await getAllUsers();
+  console.log(users);
 
-  console.log("User created successfully:", newUser);
+  /*const newUser = await addUser({ name: "Kornél", email: "durva@hogy.mukodik" });
+  console.log("New User:", newUser);*/
+
+  const count = await userCount();
+  console.log("User Count:", count);
 }
 
 main()
-  .catch((e) => {
-    console.error("Database error:", e);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
 
-console.log("tesztebb");
+//console.log("tesztebb");
