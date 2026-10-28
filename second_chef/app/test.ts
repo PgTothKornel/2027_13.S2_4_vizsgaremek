@@ -6,18 +6,25 @@ dotenv.config({ path: resolve(process.cwd(), ".env") });
 
 
 async function main() {
-  const { getAllUsers, addUser, userCount } = await import("./lib/functions");
-  console.log("Users:");
+  const { getAllUsers, addUser, userCount, seed, createDatabase } = await import("./lib/functions");
+  /*console.log("Users:");
   const users = await getAllUsers();
   console.log(users);
 
   /*const newUser = await addUser({ name: "Kornél", email: "durva@hogy.mukodik" });
   console.log("New User:", newUser);*/
 
-  const count = await userCount();
-  console.log("User Count:", count);
+  /*const count = await userCount();
+  console.log("User Count:", count);*/
+
+  createDatabase();
+
+  //seed();
 }
 
 main()
+
+//createDatabase()
+
 
 //console.log("tesztebb");

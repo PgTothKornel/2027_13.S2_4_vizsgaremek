@@ -101,6 +101,14 @@ CREATE TABLE "Kategoria"(
     "id" INTEGER NOT NULL,                              -- kategória azonosítója
     "kategoria" VARCHAR(255) NOT NULL                   -- kategória neve (pl. leves, desszert)
 );
+
+ALTER TABLE "allergen_alapanyag_osszekoto" ADD PRIMARY KEY ("alapanyag_id", "allergen_id");
+ALTER TABLE "recept_alapanyag_osszekoto"   ADD PRIMARY KEY ("recept_id", "alapanyag_id");
+ALTER TABLE "huto"                         ADD PRIMARY KEY ("profil_id", "alapanyag_id");
+ALTER TABLE "allergen_fiok_osszekoto"      ADD PRIMARY KEY ("fiok_id", "allergen_id");
+ALTER TABLE "velemeny_receptrol"    ADD COLUMN "id" SERIAL PRIMARY KEY;
+ALTER TABLE "velemeny_alapanyagrol" ADD COLUMN "id" SERIAL PRIMARY KEY;
+
 ALTER TABLE
     "Kategoria" ADD PRIMARY KEY("id");
 
