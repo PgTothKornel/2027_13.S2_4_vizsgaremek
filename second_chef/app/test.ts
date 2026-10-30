@@ -6,7 +6,7 @@ dotenv.config({ path: resolve(process.cwd(), ".env") });
 
 
 async function main() {
-  const { getAllUsers, addUser, userCount, seed, createDatabase } = await import("./lib/functions");
+  const { getAllUsers, addUser, userCount, seed, createDatabase, previewFoods, hutoTest, personalizedFoods } = await import("./lib/functions");
   /*console.log("Users:");
   const users = await getAllUsers();
   console.log(users);
@@ -17,9 +17,17 @@ async function main() {
   /*const count = await userCount();
   console.log("User Count:", count);*/
 
-  createDatabase();
+  //createDatabase();
 
+  //console.log(await previewFoods());
+
+  /*const hutoContents = await hutoTest(1);
+  console.log("Huto Contents:", hutoContents[0].alapanyag.nev);
+  const alapanyagok = hutoContents.map(alapanyag => alapanyag.alapanyag.nev);
+  console.log("Alapanyagok:", alapanyagok);*/
   //seed();
+
+  console.log(await personalizedFoods(1));
 }
 
 main()

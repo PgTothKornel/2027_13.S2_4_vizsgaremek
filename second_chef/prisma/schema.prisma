@@ -50,10 +50,12 @@ model allergenek {
 
 model fiok {
   id                      Int                       @id
-  etrend                  String                    @db.VarChar(255)
-  profil_id               Int
+  email                   String                    @db.VarChar(255)
+  password                String                    @db.VarChar(255)
+  created                 DateTime                  @db.Timestamp(0)
+  preferencia             String?                   @db.VarChar(255)
   allergen_fiok_osszekoto allergen_fiok_osszekoto[]
-  profil                  profil                    @relation(fields: [profil_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fiok_profil_id_foreign")
+  huto                    huto[]
   velemeny_alapanyagrol   velemeny_alapanyagrol[]
   velemeny_receptrol      velemeny_receptrol[]
 }
@@ -62,7 +64,7 @@ model huto {
   alapanyag_id Int
   profil_id    Int
   alapanyag    alapanyag @relation(fields: [alapanyag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "huto_alapanyag_id_foreign")
-  profil       profil    @relation(fields: [profil_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "huto_profil_id_foreign")
+  profil       fiok      @relation(fields: [profil_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "huto_profil_id_foreign")
 
   @@id([profil_id, alapanyag_id])
 }
@@ -71,15 +73,6 @@ model mertekegysegek {
   id       Int    @id
   nev      String @db.VarChar(255)
   egysegek Json   @db.Json
-}
-
-model profil {
-  id       Int      @id
-  email    String   @db.VarChar(255)
-  password String   @db.VarChar(255)
-  created  DateTime @db.Timestamp(0)
-  fiok     fiok[]
-  huto     huto[]
 }
 
 model recept {
@@ -110,16 +103,18 @@ model velemeny_alapanyagrol {
   fiok_id      Int
   alapanyag_id Int
   velemeny     String    @db.VarChar(255)
-  id           Int       @id @default(autoincrement())
   alapanyag    alapanyag @relation(fields: [alapanyag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "velemeny_alapanyagrol_alapanyag_id_foreign")
   fiok         fiok      @relation(fields: [fiok_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "velemeny_alapanyagrol_fiok_id_foreign")
+
+  @@id([fiok_id, alapanyag_id])
 }
 
 model velemeny_receptrol {
   fiok_id   Int
   recept_id Int
   velemeny  String @db.VarChar(255)
-  id        Int    @id @default(autoincrement())
   fiok      fiok   @relation(fields: [fiok_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "velemeny_receptrol_fiok_id_foreign")
   recept    recept @relation(fields: [recept_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "velemeny_receptrol_recept_id_foreign")
+
+  @@id([fiok_id, recept_id])
 }
