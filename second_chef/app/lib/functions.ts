@@ -55,7 +55,7 @@ export async function previewFoods() {
 
         return await prisma.recept.findMany({
             skip: randomIndex,
-            take: 5
+            take: 10
         });
     } catch (error) {
         console.error(error);
@@ -114,6 +114,14 @@ export async function hutoTest(id: number) {
     const userFridge = await prisma.huto.findMany({
             where: { profil_id: id },
             select: { alapanyag: true }
+        });
+
+    return userFridge;
+}
+
+export async function hutoAlapanyagAdas(id: number, alapanyagId: number) {
+    const userFridge = await prisma.huto.create({
+            data: { profil_id: id, alapanyag_id: alapanyagId }
         });
 
     return userFridge;
