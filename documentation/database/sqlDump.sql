@@ -99,8 +99,8 @@ ALTER TABLE "allergen_alapanyag_osszekoto" ADD PRIMARY KEY ("alapanyag_id", "all
 ALTER TABLE "recept_alapanyag_osszekoto"   ADD PRIMARY KEY ("recept_id", "alapanyag_id");
 ALTER TABLE "huto"                         ADD PRIMARY KEY ("profil_id", "alapanyag_id");
 ALTER TABLE "allergen_fiok_osszekoto"      ADD PRIMARY KEY ("fiok_id", "allergen_id");
-ALTER TABLE "velemeny_receptrol"           ADD PRIMARY KEY ("fiok_id", "recept_id");      -- egy fiók egy receptről csak egy véleményt írhat
-ALTER TABLE "velemeny_alapanyagrol"        ADD PRIMARY KEY ("fiok_id", "alapanyag_id");   -- egy fiók egy alapanyagról csak egy véleményt írhat
+ALTER TABLE "velemeny_receptrol"           ADD PRIMARY KEY ("fiok_id", "recept_id");      
+ALTER TABLE "velemeny_alapanyagrol"        ADD PRIMARY KEY ("fiok_id", "alapanyag_id");  
 
 ALTER TABLE
     "Kategoria" ADD PRIMARY KEY("id");
