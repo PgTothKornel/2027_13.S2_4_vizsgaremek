@@ -1,29 +1,39 @@
 import dotenv from "dotenv";
 import { resolve } from "node:path";
-
 dotenv.config({ path: resolve(process.cwd(), ".env") });
 
-console.log("DATABASE_URL loaded:", process.env.DATABASE_URL);
+//console.log("DATABASE_URL loaded:", process.env.DATABASE_URL);
 
-const { prisma } = await import("../app/lib/prisma.ts");
 
 async function main() {
-  const newUser = await prisma.user.create({
-    data: {
-      email: "noel@kocsis",
-      name: "NKoel",
-    },
-  });
+  const { getAllUsers, addUser, userCount, seed, createDatabase, previewFoods, hutoTest, personalizedFoods, hutoAlapanyagAdas } = await import("./lib/functions");
+  /*console.log("Users:");
+  const users = await getAllUsers();
+  console.log(users);
 
-  console.log("User created successfully:", newUser);
+  /*const newUser = await addUser({ name: "Kornél", email: "durva@hogy.mukodik" });
+  console.log("New User:", newUser);*/
+
+  /*const count = await userCount();
+  console.log("User Count:", count);*/
+
+  //createDatabase();
+
+  //console.log(await previewFoods());
+
+  /*const hutoContents = await hutoTest(1);
+  console.log("Huto Contents:", hutoContents[0].alapanyag.nev);
+  const alapanyagok = hutoContents.map(alapanyag => alapanyag.alapanyag.nev);
+  console.log("Alapanyagok:", alapanyagok);*/
+  //seed();
+
+  //console.log(await hutoAlapanyagAdas(1, 5));
+  console.log(await hutoTest(1));
 }
 
 main()
-  .catch((e) => {
-    console.error("Database error:", e);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
 
-console.log("tesztebb");
+//createDatabase()
+
+
+//console.log("tesztebb");
