@@ -1,6 +1,6 @@
 "use client";
 
-import { recipes } from "@/app/lib/demo-data";
+import type { Recipe } from '@/app/lib/demo-data';
 import { useChef } from "../SecondChefProvider";
 import RecipeCard from "./RecipeCard";
 
@@ -8,11 +8,10 @@ const filters = [
   ["all", "Neked ajánljuk"],
   ["quick", "30 perc alatt"],
   ["high-protein", "Magas fehérje"],
-  ["vegetarian", "Húsmentes"],
 ];
 
 export function DiscoverView() {
-  const { filter, setFilter, search, setSearch } = useChef();
+  const { filter, setFilter, search, setSearch, recipes, data, loading, error } = useChef();
   const term = search.toLocaleLowerCase("hu");
   const list = recipes.filter(
     (recipe) =>
@@ -22,6 +21,9 @@ export function DiscoverView() {
           .toLocaleLowerCase("hu")
           .includes(term)),
   );
+  const recommendedIds = new Set(data?.recommendedIds ?? []);
+  const recommended = list.filter(recipe => recommendedIds.has(recipe.id));
+  const suggestions = list.filter(recipe => !recommendedIds.has(recipe.id));
   return (
     <>
       <header className="app-heading flex justify-between items-end mb-10 [&_h1]:font-display [&_h1]:text-[clamp(3rem,5.5vw,5.5rem)] [&_h1]:leading-[.9] [&_h1]:font-normal [&_h1]:mt-0 [&_h1]:mx-0 [&_h1]:mb-3.5 [&_h1]:tracking-[-.04em] [&_p]:mt-0 max-[680px]:items-start max-[680px]:gap-3 max-[680px]:grid max-[680px]:grid-cols-[minmax(0,1fr)_auto] max-[680px]:[&_h1]:text-[3.5rem] max-[680px]:[&_.filter-button]:[flex:0_0_auto] max-[680px]:[&_.filter-button]:py-2.5 max-[680px]:[&_.filter-button]:px-[13px] [&>div]:min-w-0 max-[680px]:[&_.muted]:whitespace-normal max-[680px]:[&_.muted]:[overflow-wrap:anywhere]">
@@ -67,23 +69,29 @@ export function DiscoverView() {
           </button>
         </p>
       )}
-      <div className="discover-grid grid grid-cols-3 gap-5 [&_.recipe-card_.image-wrap]:h-[250px] [&_.recipe-card_h3]:text-[1.7rem] max-[980px]:grid-cols-2 max-[680px]:grid-cols-1 max-[680px]:[&_.recipe-card_.image-wrap]:h-[300px]">
-        {list.length ? (
-          list.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
-        ) : (
-          <div className="empty-state text-center py-17.5 px-5 bg-cream rounded-3xl [&_span]:font-display [&_span]:text-[4rem] [&_span]:text-sand">
-            <span>⌕</span>
-            <h2>Nincs találat.</h2>
-            <p>Próbálj más kifejezést vagy szűrőt.</p>
-          </div>
-        )}
-      </div>
+      {loading ? <p role="status">Receptek betöltése…</p> : !error && <>
+        <section aria-labelledby="recommended-heading" className="mt-5">
+          <h2 id="recommended-heading" className="font-display text-3xl mb-3">A kamrádhoz és az ízlésedhez illő receptek</h2>
+          <p className="mb-5 text-sm text-[#637174]">Az egyezés a meglévő alapanyagok aránya; a szükséges mennyiségeket az adatbázis nem tartalmazza.</p>
+          {recommended.length ? <RecipeGrid recipes={recommended} /> :
+            <div className="bg-cream rounded-3xl p-8" role="status">
+              <h3 className="font-display text-2xl">Nincs találat a személyre szabott ajánlások között.</h3>
+              <p>Adj hozzá alapanyagot a kamrádhoz, vagy módosítsd a kategóriát, a keresést és a szűrőket.</p>
+            </div>}
+          {recommended.length > 0 && recommended.length < 5 && <p className="mt-4">Most {recommended.length} egyező receptet találtunk.</p>}
+        </section>
+        <section aria-labelledby="suggestions-heading" className="mt-12 pt-8 border-t border-line">
+          <h2 id="suggestions-heading" className="font-display text-4xl mb-3">Ezek is tetszhetnek</h2>
+          <p className="mb-6 text-[#637174]">További ötletek a megadott allergénkizárások figyelembevételével.</p>
+          {suggestions.length ? <RecipeGrid recipes={suggestions} /> : <p>Nincs további találat a jelenlegi beállításokkal.</p>}
+        </section>
+      </>}
     </>
   );
 }
 
 export function FavoritesView() {
-  const { favorites } = useChef();
+  const { favorites, recipes, loading } = useChef();
   const list = recipes.filter((recipe) => favorites.includes(recipe.id));
   return (
     <>
@@ -94,10 +102,11 @@ export function FavoritesView() {
           </p>
           <h1>Kedvencek</h1>
           <p className="muted text-[#637174]">
-            A szívecskével mentett receptjeid egy helyen.
+            A szívecskével mentett receptjeid, az allergénkizárások figyelembevételével.
           </p>
         </div>
       </header>
+      {loading && <p role="status">Kedvencek betöltése…</p>}
       <div className="discover-grid grid grid-cols-3 gap-5 [&_.recipe-card_.image-wrap]:h-[250px] [&_.recipe-card_h3]:text-[1.7rem] max-[980px]:grid-cols-2 max-[680px]:grid-cols-1 max-[680px]:[&_.recipe-card_.image-wrap]:h-[300px]">
         {list.length ? (
           list.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
@@ -117,4 +126,10 @@ export function FavoritesView() {
       </div>
     </>
   );
+}
+
+function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
+  return <div className="discover-grid grid grid-cols-3 gap-5 [&_.recipe-card_.image-wrap]:h-[250px] [&_.recipe-card_h3]:text-[1.7rem] max-[980px]:grid-cols-2 max-[680px]:grid-cols-1">
+    {recipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
+  </div>;
 }

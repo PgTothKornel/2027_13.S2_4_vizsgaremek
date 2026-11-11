@@ -1,4 +1,4 @@
-export type Recipe = { id: string; title: string; type: string; time: number; kcal: number; protein: number; match: number; image: string | null; tags: string[]; servings: number; ingredients: [string, number, string, boolean][]; description: string };
+export type Recipe = { id: string; title: string; type: string; time: number; kcal: number | null; protein: number | null; match: number; image: string | null; tags: string[]; servings: number; ingredients: [string, number | null, string, boolean][]; description: string; steps?: string[] };
 export type PantryItem = { id: number; name: string; qty: number | null; unit: string; category: string };
 export type ShoppingItem = { id: number; name: string; qty: string; source: string; bought: boolean };
 export type Route = 'home' | 'discover' | 'pantry' | 'favorites' | 'shopping' | 'profile';

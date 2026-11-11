@@ -10,15 +10,26 @@ if (!connectionString) {
 }
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient;
+  prisma?: PrismaClient;
+  prismaClientClass?: typeof PrismaClient;
 };
 
+// After client regeneration, a hot-reloaded dev server must not reuse a client
+// built for the previous schema (for example, the old User-only data model).
+const previousPrisma = globalForPrisma.prisma;
+const cachedPrisma = globalForPrisma.prismaClientClass === PrismaClient
+  ? previousPrisma : undefined;
+
 export const prisma =
-  globalForPrisma.prisma ??
+  cachedPrisma ??
   new PrismaClient({
     adapter: new PrismaPg({ connectionString }),
   });
 
 if (process.env.NODE_ENV !== "production") {
+  if (previousPrisma && previousPrisma !== prisma) {
+    void previousPrisma.$disconnect().catch(() => {});
+  }
   globalForPrisma.prisma = prisma;
+  globalForPrisma.prismaClientClass = PrismaClient;
 }

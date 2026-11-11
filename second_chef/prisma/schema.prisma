@@ -54,6 +54,7 @@ model fiok {
   password                String                    @db.VarChar(255)
   created                 DateTime                  @db.Timestamp(0)
   preferencia             String?                   @db.VarChar(255)
+  makrocelok              Json?                     @db.Json
   allergen_fiok_osszekoto allergen_fiok_osszekoto[]
   huto                    huto[]
   velemeny_alapanyagrol   velemeny_alapanyagrol[]
@@ -63,6 +64,9 @@ model fiok {
 model huto {
   alapanyag_id Int
   profil_id    Int
+  mennyiseg    Float?
+  egyseg       String? @db.VarChar(32)
+  kategoria    String? @db.VarChar(64)
   alapanyag    alapanyag @relation(fields: [alapanyag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "huto_alapanyag_id_foreign")
   profil       fiok      @relation(fields: [profil_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "huto_profil_id_foreign")
 

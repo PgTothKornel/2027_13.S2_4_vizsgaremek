@@ -9,6 +9,7 @@ function RecipeDetails({ recipe }: { recipe: Recipe }) {
   const { favorites, toggleFavorite, shopping, setShopping, notify } =
     useChef();
   const [servings, setServings] = useState(recipe.servings);
+  const [imageFailed, setImageFailed] = useState(false);
   const factor = servings / recipe.servings;
   function addMissing() {
     const missing = recipe.ingredients.filter(
@@ -20,7 +21,7 @@ function RecipeDetails({ recipe }: { recipe: Recipe }) {
       ...missing.map(([name, qty, unit], index) => ({
         id: Date.now() + index,
         name,
-        qty: `${Number((qty * factor).toFixed(1))} ${unit}`,
+        qty: qty === null ? 'Mennyiség nincs megadva' : `${Number((qty * factor).toFixed(1))} ${unit}`,
         source: recipe.title,
         bought: false,
       })),
@@ -34,10 +35,10 @@ function RecipeDetails({ recipe }: { recipe: Recipe }) {
   return (
     <div className="recipe-modal-grid grid grid-cols-2 max-[680px]:grid-cols-1">
       <div className="recipe-modal-image min-h-[640px] relative [&_img]:absolute [&_img]:w-full [&_img]:h-full [&_img]:object-cover max-[680px]:min-h-[300px]">
-        {recipe.image ? (
-          <img src={recipe.image} alt={recipe.title} />
+        {recipe.image && !imageFailed ? (
+          <img src={recipe.image} alt={recipe.title} onError={() => setImageFailed(true)} />
         ) : (
-          <div className="image-wrap placeholder">
+          <div className="image-wrap placeholder min-h-[300px] h-full grid place-items-center bg-deep text-white font-display text-7xl">
             <span>{recipe.title[0]}</span>
           </div>
         )}
@@ -50,8 +51,8 @@ function RecipeDetails({ recipe }: { recipe: Recipe }) {
         <p>{recipe.description}</p>
         <div className="modal-meta flex gap-4.5 [border-block:1px_solid_var(--color-line)] py-4.5 px-0 my-5.5 mx-0 text-[.85rem]">
           <span>◷ {recipe.time} perc</span>
-          <span>◉ {recipe.kcal} kcal / adag</span>
-          <span>● {recipe.protein} g fehérje</span>
+          <span>◉ {recipe.kcal === null ? 'Nincs energiaadat' : `${recipe.kcal} kcal / adag`}</span>
+          <span>● {recipe.protein === null ? 'Nincs fehérjeadat' : `${recipe.protein} g fehérje`}</span>
         </div>
         <div className="serving-control flex items-center justify-between bg-aqua py-3.5 px-4.5 rounded-[14px] [&_div]:flex [&_div]:gap-2.5 [&_div]:items-center [&_button]:w-7.5 [&_button]:h-7.5 [&_button]:border-0 [&_button]:bg-white [&_button]:rounded-full [&_button]:cursor-pointer">
           <span>Adagok száma</span>
@@ -80,14 +81,17 @@ function RecipeDetails({ recipe }: { recipe: Recipe }) {
                 {has ? "●" : "○"} {name}
               </span>
               <strong>
-                {Number((qty * factor).toFixed(1))} {unit}
+                {qty === null ? 'Nincs megadva' : Number((qty * factor).toFixed(1))} {unit}
               </strong>
             </li>
           ))}
         </ul>
         <p className="safety-note text-[.76rem] text-[#778487] mt-5 mx-0 mb-0">
-          ● megvan a kamrában · ○ hiányzik vagy a mennyiség nem ellenőrizhető
+          ● szerepel a kamrában · ○ hiányzik. A szükséges mennyiségek nincsenek megadva a recepthez.
         </p>
+        {!!recipe.steps?.length && <section className="mt-6"><h3>Elkészítés</h3>
+          <ol className="list-decimal pl-5 space-y-3">{recipe.steps.map((step, index) => <li key={index}>{step}</li>)}</ol>
+        </section>}
         <div className="modal-actions flex gap-2.5 mt-6 max-[680px]:flex-col">
           <button
             className="pill-button inline-flex items-center justify-center border-0 rounded-full py-[15px] px-[23px] font-bold bg-deep text-cream cursor-pointer [transition:transform_.3s_var(--ease-chef),background_.3s] hover:[transform:translateY(-2px)_scale(1.015)] [&.small]:py-[11px] [&.small]:px-4.5 [&.small]:text-[.86rem] [&.coral]:bg-sand [&.coral:hover]:bg-[#aa5c42] coral"

@@ -1,11 +1,13 @@
 "use client";
 
 import type { Recipe } from "@/app/lib/demo-data";
+import { useState } from 'react';
 import { useChef } from "../SecondChefProvider";
 
 export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const { favorites, toggleFavorite, setSelectedRecipe } = useChef();
   const saved = favorites.includes(recipe.id);
+  const [imageFailed, setImageFailed] = useState(false);
   return (
     <article
       className="recipe-card relative bg-cream rounded-[26px] overflow-hidden cursor-pointer min-w-0 shadow-[0_14px_35px_rgba(48,76,83,.07)] [transition:transform_.45s_var(--ease-chef),box-shadow_.45s] hover:[transform:translateY(-8px)] hover:shadow-[0_24px_50px_rgba(48,76,83,.14)] [&_.image-wrap]:h-[330px] [&_.image-wrap]:overflow-hidden [&_.image-wrap]:relative [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:[transition:transform_.8s_var(--ease-chef)] [&:hover_img]:[transform:scale(1.045)] [&_.image-wrap.placeholder]:[background:linear-gradient(135deg,var(--color-aqua),var(--color-deep))] [&_.image-wrap.placeholder]:grid [&_.image-wrap.placeholder]:place-items-center [&_.image-wrap.placeholder]:text-white [&_.image-wrap.placeholder]:font-display [&_.image-wrap.placeholder]:text-[4rem] [&_h3]:font-display [&_h3]:text-[2rem] [&_h3]:font-normal [&_h3]:leading-[1] [&_h3]:my-[15px] [&_h3]:mx-0 max-[980px]:snap-start max-[680px]:[&_.image-wrap]:h-[290px] focus-visible:[outline:3px_solid_var(--color-sand)] focus-visible:[outline-offset:4px]"
@@ -35,14 +37,14 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
       >
         {saved ? "♥" : "♡"}
       </button>
-      <div className={`image-wrap ${recipe.image ? "" : " placeholder"}`}>
-        {recipe.image ? (
-          <img src={recipe.image} alt={recipe.title} loading="lazy" />
+      <div className={`image-wrap ${recipe.image && !imageFailed ? "" : " placeholder"}`}>
+        {recipe.image && !imageFailed ? (
+          <img src={recipe.image} alt={recipe.title} loading="lazy" onError={() => setImageFailed(true)} />
         ) : (
           <span>{recipe.title.charAt(0)}</span>
         )}
-        <div className="match-chip absolute left-4 top-4 bg-[rgba(247,244,239,.9)] backdrop-blur-[8px] rounded-full py-2 px-3 text-[.72rem] font-bold">
-          {recipe.match}% egyezés
+        <div className="match-chip absolute left-4 top-4 bg-[rgba(247,244,239,.9)] text-deep backdrop-blur-[8px] rounded-full py-2 px-3 text-[.72rem] font-bold">
+          {recipe.match}% alapanyag-egyezés
         </div>
       </div>
       <div className="recipe-body p-5.5">
@@ -52,8 +54,8 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
         </div>
         <h3>{recipe.title}</h3>
         <div className="recipe-meta flex gap-3.5 text-[.78rem] text-[#59676a]">
-          <span>{recipe.kcal} kcal</span>
-          <span>{recipe.protein} g fehérje</span>
+          <span>{recipe.kcal === null ? 'Nincs energiaadat' : `${recipe.kcal} kcal`}</span>
+          <span>{recipe.protein === null ? 'Nincs fehérjeadat' : `${recipe.protein} g fehérje`}</span>
           <span>{recipe.servings} adag</span>
         </div>
       </div>

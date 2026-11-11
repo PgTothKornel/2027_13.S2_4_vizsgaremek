@@ -6,7 +6,7 @@ import { useChef } from "../SecondChefProvider";
 import Modal from "../Modal";
 
 export default function PantryView() {
-  const { pantry, setPantry, notify } = useChef();
+  const { pantry, data: chefData, addPantry, removePantry, saving, loading, notify } = useChef();
   const [query, setQuery] = useState("");
   const [adding, setAdding] = useState(false);
   const groups = pantry
@@ -17,26 +17,19 @@ export default function PantryView() {
       (result[item.category] ??= []).push(item);
       return result;
     }, {});
-  function addItem(event: FormEvent<HTMLFormElement>) {
+  async function addItem(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
-    const name = String(data.get("name") ?? "").trim();
-    if (!name) return;
+    const ingredientId = Number(data.get('ingredientId'));
     const quantity = String(data.get("qty") ?? "");
-    setPantry((current) => [
-      ...current,
-      {
-        id: Date.now(),
-        name,
+    const saved = await addPantry({
+        ingredientId,
         qty: quantity ? Number(quantity) : null,
         unit: String(data.get("unit")),
         category: String(data.get("category")),
-      },
-    ]);
-    form.reset();
-    setAdding(false);
-    notify("Alapanyag hozzáadva");
+    });
+    if (saved) { form.reset(); setAdding(false); }
   }
   return (
     <>
@@ -52,11 +45,13 @@ export default function PantryView() {
         </div>
         <button
           className="pill-button inline-flex items-center justify-center border-0 rounded-full py-[15px] px-[23px] font-bold bg-deep text-cream cursor-pointer [transition:transform_.3s_var(--ease-chef),background_.3s] hover:[transform:translateY(-2px)_scale(1.015)] [&.small]:py-[11px] [&.small]:px-4.5 [&.small]:text-[.86rem] [&.coral]:bg-sand [&.coral:hover]:bg-[#aa5c42] coral"
+          disabled={loading || saving || !chefData}
           onClick={() => setAdding(true)}
         >
           + Alapanyag
         </button>
       </header>
+      {loading && <p role="status">Kamra betöltése…</p>}
       <div className="pantry-tools flex gap-3 mb-8 [&_input]:[flex:1] [&_input]:bg-cream [&_input]:[border:1px_solid_var(--color-line)] [&_input]:rounded-[14px] [&_input]:py-3.5 [&_input]:px-4.5 [&_button]:[border:1px_solid_var(--color-line)] [&_button]:rounded-[14px] [&_button]:bg-aqua [&_button]:font-bold [&_button]:py-0 [&_button]:px-5 [&_button]:cursor-pointer max-[680px]:flex-col max-[680px]:[&_button]:p-3.5">
         <input
           type="search"
@@ -98,12 +93,8 @@ export default function PantryView() {
                 </span>
                 <button
                   aria-label={`${item.name} törlése`}
-                  onClick={() => {
-                    setPantry((current) =>
-                      current.filter((value) => value.id !== item.id),
-                    );
-                    notify("Alapanyag eltávolítva");
-                  }}
+                  disabled={saving || loading}
+                  onClick={() => void removePantry(item.id)}
                 >
                   ×
                 </button>
@@ -121,7 +112,7 @@ export default function PantryView() {
       </div>
       <Modal
         open={adding}
-        onClose={() => setAdding(false)}
+        onClose={() => { if (!saving) setAdding(false); }}
         label="Alapanyag hozzáadása"
         small
       >
@@ -129,7 +120,10 @@ export default function PantryView() {
         <form onSubmit={addItem}>
           <label>
             Név
-            <input name="name" required placeholder="pl. csicseriborsó" />
+            <select name="ingredientId" required defaultValue="">
+              <option value="" disabled>Válassz alapanyagot…</option>
+              {chefData?.ingredients.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+            </select>
           </label>
           <div className="form-row grid grid-cols-2 gap-3 max-[680px]:grid-cols-1">
             <label>
@@ -160,10 +154,11 @@ export default function PantryView() {
             </select>
           </label>
           <button
+            disabled={saving || loading}
             className="pill-button inline-flex items-center justify-center border-0 rounded-full py-[15px] px-[23px] font-bold bg-deep text-cream cursor-pointer [transition:transform_.3s_var(--ease-chef),background_.3s] hover:[transform:translateY(-2px)_scale(1.015)] [&.small]:py-[11px] [&.small]:px-4.5 [&.small]:text-[.86rem] [&.coral]:bg-sand [&.coral:hover]:bg-[#aa5c42] coral"
             type="submit"
           >
-            Mentés a kamrába
+            {saving ? 'Mentés…' : 'Mentés a kamrába'}
           </button>
         </form>
       </Modal>

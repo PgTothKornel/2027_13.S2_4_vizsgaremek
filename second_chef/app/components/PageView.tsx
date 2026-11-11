@@ -12,7 +12,7 @@ export default function PageView({
   name: Route;
   children: ReactNode;
 }) {
-  const { route } = useChef();
+  const { route, error, loading, refresh } = useChef();
   const app = name !== "home";
   return (
     <section
@@ -27,6 +27,11 @@ export default function PageView({
           <section
             className={`app-content pt-15 px-[clamp(24px,5vw,80px)] pb-25 max-w-[1440px] w-full my-0 mx-auto min-w-0 max-[680px]:pt-10.5 max-[680px]:px-4 max-[680px]:pb-17.5 ${name === "shopping" ? " shopping-page [&.shopping-page]:max-w-[1050px]" : ""}`}
           >
+            {error && name !== 'shopping' && <div role="status" className="mb-6 rounded-2xl border border-line bg-cream p-4 text-sm">
+              <p className="m-0">{error}</p>
+              <button type="button" className="mt-2 underline disabled:opacity-50" disabled={loading}
+                onClick={() => void refresh()}>Adatok újratöltése</button>
+            </div>}
             {children}
           </section>
         </div>

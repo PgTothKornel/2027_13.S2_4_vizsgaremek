@@ -1,7 +1,9 @@
-import { recipes } from "@/app/lib/demo-data";
+"use client";
+import { useChef } from '../SecondChefProvider';
 import RecipeCard from "../recipes/RecipeCard";
 
 export default function RecipeShowcase() {
+  const { recipes, loading } = useChef();
   return (
     <section className="recipe-showcase bg-paper overflow-hidden">
       <div className="showcase-head flex justify-between items-end pb-15 max-[680px]:items-start section-pad py-30 px-[max(5vw,24px)] max-[680px]:py-20.5 max-[680px]:px-5">
@@ -26,6 +28,8 @@ export default function RecipeShowcase() {
         </a>
       </div>
       <div className="recipe-rail pt-0 grid grid-cols-[repeat(3,minmax(280px,1fr))] gap-5.5 max-[980px]:grid-cols-[repeat(3,72vw)] max-[980px]:overflow-auto max-[980px]:snap-x max-[980px]:snap-mandatory max-[980px]:pr-6 max-[680px]:grid-cols-[repeat(3,85vw)] max-[680px]:pl-5 section-pad py-30 px-[max(5vw,24px)] max-[680px]:py-20.5 max-[680px]:px-5">
+        {loading && <p role="status">Receptek betöltése…</p>}
+        {!loading && !recipes.length && <p>Nincs megjeleníthető recept a jelenlegi beállításokkal.</p>}
         {recipes.slice(0, 3).map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
