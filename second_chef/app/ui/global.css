@@ -1,16 +1,88 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap");
+@import "tailwindcss" source("../");
 
-input[type='number'] {
-  -moz-appearance: textfield;
-  appearance: textfield;
+@theme {
+  --color-sand: #bc6c50;
+  --color-deep: #304c53;
+  --color-blush: #ddad9c;
+  --color-cocoa: #5a2f25;
+  --color-aqua: #afe0e7;
+  --color-paper: #f7f4ef;
+  --color-ink: #17272b;
+  --color-cream: #fffdf9;
+  --color-line: rgba(23, 39, 43, 0.16);
+  --font-sans: "DM Sans", Arial, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --ease-chef: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-input[type='number']::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+@layer base {
+  html {
+    @apply scroll-smooth bg-paper;
+  }
+  body {
+    @apply m-0 overflow-x-hidden bg-paper font-sans text-base leading-[1.45] text-ink;
+  }
+  body.menu-open,
+  body.search-open {
+    @apply overflow-hidden;
+  }
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+  button {
+    color: inherit;
+  }
+  input[type="number"] {
+    appearance: textfield;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
 
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+/* Only animation definitions and the global reduced-motion preference need custom CSS. */
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes stretch {
+  50% {
+    width: 54px;
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-image {
+    transform: none !important;
+  }
 }
