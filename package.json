@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "express": "^5.3.0",
     "pnpm": "^12.11.2"
   },
   "allowScripts": {
