@@ -30,6 +30,7 @@ export default function SiteFooter() {
           <a href="#home">Rólunk</a>
           <a href="#home">Adatvédelem</a>
           <a href="#home">Kapcsolat</a>
+          <a href="/photo-credits.html">Fotók és források</a>
         </div>
         <div className="footer-note [&_p]:m-0 [&_p]:max-w-[460px] [&_p]:text-[#dcbeb4] max-[680px]:[grid-column:1/-1]">
           <span>Demó verzió</span>

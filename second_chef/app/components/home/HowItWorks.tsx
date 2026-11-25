@@ -1,3 +1,4 @@
+import { demoRecipeImages } from '@/app/lib/recipe-images';
 export default function HowItWorks() {
   return (
     <section
@@ -68,7 +69,7 @@ export default function HowItWorks() {
             32 g fehérje
           </div>
           <div className="plate-wrap w-[min(36vw,520px)] h-[min(36vw,520px)] rounded-full p-4.5 bg-paper shadow-[0_40px_90px_rgba(0,0,0,.35)] relative will-change-transform [transition:.6s_var(--ease-chef)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:rounded-full max-[980px]:w-[min(55vw,470px)] max-[980px]:h-[min(55vw,470px)] max-[680px]:w-[70vw] max-[680px]:h-[70vw]">
-            <img src="/assets/shakshuka.png" alt="" />
+            <img src={demoRecipeImages.shakshuka} alt="" />
             <div className="plate-ring absolute inset-[-35px] [border:1px_solid_rgba(175,224,231,.4)] rounded-full"></div>
           </div>
           <div className="match-badge absolute right-[4%] bottom-[11%] bg-sand w-[145px] h-[145px] rounded-full flex items-center justify-center flex-col [transform:rotate(8deg)] shadow-[0_15px_40px_rgba(0,0,0,.2)] [&_strong]:font-display [&_strong]:text-[3rem] [&_strong]:leading-[1] [&_span]:text-[.68rem] max-[680px]:w-25 max-[680px]:h-25 max-[680px]:right-[8%] max-[680px]:bottom-[6%] max-[680px]:[&_strong]:text-[2rem]">

@@ -1,8 +1,7 @@
 import { prisma } from './prisma';
 import { defaultMacros, type ChefData } from './chef-data';
 import { rankRecipes, type RecommendationCandidate } from './recommendations';
-import { existsSync } from 'node:fs';
-import { resolve, sep } from 'node:path';
+import { recipeImageUrl } from './recipe-images';
 
 export function testUserId() {
   const id = Number(process.env.TEST_USER_ID);
@@ -16,14 +15,6 @@ function object(value: unknown): Record<string, unknown> {
 }
 function number(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
-}
-function recipeImage(value: unknown): string | null {
-  if (typeof value !== 'string') return null;
-  if (value.startsWith('https://')) return value;
-  if (!value.startsWith('/') || value.startsWith('//')) return null;
-  const publicRoot = resolve(process.cwd(), 'public');
-  const file = resolve(publicRoot, `.${value}`);
-  return file.startsWith(publicRoot + sep) && existsSync(file) ? value : null;
 }
 function macros(value: unknown): ChefData['profile']['macros'] {
   return Array.isArray(value) && value.length === 4 && value.every(v => number(v) !== null)
@@ -56,7 +47,7 @@ export async function loadChefData(id: number): Promise<ChefData> {
       const nutrients = object(row.tapanyagok);
       const links = row.recept_alapanyag_osszekoto;
       const protein = number(nutrients.feherje_g);
-      const image = object(row.kep).fo_kep;
+      const image = typeof row.kep === 'string' ? row.kep : object(row.kep).fo_kep;
       const steps = Array.isArray(row.lepesek) ? [...row.lepesek]
         .sort((a, b) => Number(object(a).sorszam ?? 0) - Number(object(b).sorszam ?? 0))
         .map(step => object(step).leiras).filter((step): step is string => typeof step === 'string') : [];
@@ -64,7 +55,7 @@ export async function loadChefData(id: number): Promise<ChefData> {
         id: String(row.id), title: row.nev, type: row.Kategoria.kategoria,
         time: row.ido, servings: Math.max(1, row.adag), description: row.leiras,
         kcal: number(nutrients.kcal), protein, carbs: number(nutrients.szenhidrat_g), fat: number(nutrients.zsir_g),
-        image: recipeImage(image),
+        image: recipeImageUrl(image, process.env.RECIPE_IMAGE_BASE_URL),
         tags: [...(row.ido <= 30 ? ['quick'] : []), ...(protein !== null && protein >= 30 ? ['high-protein'] : [])],
         match: 0, steps,
         ingredientIds: links.map(link => link.alapanyag_id),

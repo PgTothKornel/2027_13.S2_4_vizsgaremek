@@ -1,0 +1,37 @@
+[
+  {
+    "id": 29,
+    "title": "Tökfőzelék",
+    "file": "img/receptek/tokfozelek.jpg"
+  },
+  {
+    "id": 32,
+    "title": "Burgonyafőzelék kolbásszal",
+    "file": "img/receptek/burgonyafozelek-kolbasszal.jpg"
+  },
+  {
+    "id": 33,
+    "title": "Kelkáposzta-főzelék",
+    "file": "img/receptek/kelkaposzta-fozelek.jpg"
+  },
+  {
+    "id": 35,
+    "title": "Mákos tészta",
+    "file": "img/receptek/makos-teszta.jpg"
+  },
+  {
+    "id": 38,
+    "title": "Rizsfelfújt barackkal",
+    "file": "img/receptek/rizsfelfujt-barackkal.jpg"
+  },
+  {
+    "id": 45,
+    "title": "Rántott ponty",
+    "file": "img/receptek/rantott-ponty.jpg"
+  },
+  {
+    "id": 47,
+    "title": "Tőkehal paradicsomos-olívás szószban",
+    "file": "img/receptek/tokehal-paradicsomos-olivas-szoszban.jpg"
+  }
+]

@@ -86,3 +86,27 @@ npm run build
 A futó helyi szerver és a tesztadatbázis teljes bekötési ellenőrzése: node scripts/check-chef-integration.cjs. A parancs átmenetileg módosítja a tesztprofilt és egy kamratételt, majd finally ágban visszaállítja az eredeti adatokat. Helyi, más által épp nem szerkesztett tesztfiókon futtasd.
 
 A Route Handlerek működése: https://nextjs.org/docs/app/getting-started/route-handlers
+
+
+## Képek külső tárhelyről
+
+A receptek `kep.fo_kep` mezőjében teljes HTTPS-képlink tárolható. A szerver ezt
+közvetlenül továbbadja a felületnek; nincs szükség képfájlokra a `public` mappában.
+A korábbi `/img/receptek/...` hivatkozásokat az alkalmazás a
+`public/photo-credits.json` fotókatalógus alapján működő külső URL-ekre fordítja.
+Az új seed már a teljes URL-eket tartalmazza. A meglévő adatbázis régi útvonalait
+opcionálisan a `scripts/use-photo-urls.sql` frissíti; a már beállított egyedi URL-eket megőrzi.
+
+Saját felhős tárhelyre váltáskor a `kep.fo_kep` mezőbe az adott kép új HTTPS URL-jét írd.
+Ha a régi mappaszerkezetet tartod meg, a `RECIPE_IMAGE_BASE_URL` környezeti változóba
+megadhatod a tárhely közös HTTPS-prefixét. Például `https://cdn.sajat-domain.hu/kepek`
+esetén a `/img/receptek/gulyasleves.jpg` útvonal a
+`https://cdn.sajat-domain.hu/kepek/img/receptek/gulyasleves.jpg` URL-ről töltődik.
+A teljes adatbázisbeli HTTPS URL elsőbbséget élvez a közös prefixszel szemben.
+A tárhelynek a képeket a böngészők számára elérhetővé kell tennie.
+
+Ha a felület HTML-választ jelez az `/api/chef` helyén, ellenőrizd a futó Next.js-verziót
+és a projektkönyvtárat. A statikus `dist` változat nem szolgál ki adatbázisos API-t.
+A `503 application/json` válasz már működő API-útvonalat jelent, de hiányzó vagy
+hibás adatbázis-/tesztfiók-beállítást jelezhet; ezt a `npm run check:deployment` vizsgálja.
+

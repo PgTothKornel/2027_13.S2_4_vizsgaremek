@@ -31,6 +31,10 @@ chefApi.route('/api/chef/profile')
   .patch(readJson, saveProfile)
   .all(handleOtherMethods('OPTIONS, PATCH'));
 
+chefApi.use((_request, response) => {
+  response.status(404).json({ error: 'Ismeretlen API-végpont.' });
+});
+
 chefApi.use(apiError);
 
 function checkOrigin(request: Request) {

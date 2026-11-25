@@ -1,3 +1,4 @@
+import { demoRecipeImages } from '@/app/lib/recipe-images';
 export default function HeroSection() {
   return (
     <section
@@ -6,7 +7,7 @@ export default function HeroSection() {
     >
       <img
         className="hero-image absolute inset-0 w-full h-full object-cover [transform:scale(1.06)] will-change-transform [filter:saturate(.92)]"
-        src="/assets/hero-pasta.png"
+        src={demoRecipeImages.pasta}
         alt="Friss paradicsomos tészta sült paradicsommal és bazsalikommal"
       />
       <div className="hero-shade absolute inset-0 w-full h-full object-cover [background:linear-gradient(90deg,rgba(23,29,29,.78)_0%,rgba(23,29,29,.2)_58%,rgba(23,29,29,.35)_100%),linear-gradient(0deg,rgba(31,17,12,.6),transparent_50%)] max-[680px]:[background:linear-gradient(0deg,rgba(24,23,20,.84),rgba(24,23,20,.05)_72%)]"></div>

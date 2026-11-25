@@ -20,6 +20,7 @@ import {
   type ShoppingItem,
 } from "@/app/lib/demo-data";
 import type { ChefData, Profile } from '@/app/lib/chef-data';
+import { readApiResponse } from '@/app/lib/api-response';
 
 // Read browser storage after hydration so server and initial client markup agree.
 function useStoredState<T>(
@@ -112,8 +113,7 @@ export default function SecondChefProvider({
     setErrorNoticeOpen(false);
     try {
       const response = await fetch('/api/chef', { cache: 'no-store' });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error ?? 'Nem sikerült betölteni az adatokat.');
+      const result = await readApiResponse<ChefData>(response);
       setData(result);
     } catch (cause) {
       // Do not show stale recommendations after an allergy/profile change.
@@ -136,8 +136,7 @@ export default function SecondChefProvider({
       const response = await fetch(`/api/chef/${path}`, {
         method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error ?? 'A mentés nem sikerült.');
+      await readApiResponse<{ ok: boolean }>(response);
       setSelectedRecipe(null);
       await refresh();
       notify('Adatok elmentve az adatbázisba');
